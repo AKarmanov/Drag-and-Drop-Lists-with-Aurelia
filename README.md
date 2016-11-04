@@ -9,3 +9,7 @@ After move
 This is an experimental project I did to test out how Aurelia works, its limitations and possibilities.
 
 More to come ...
+
+##Known issues / TODO fixes
+
+- Dropping a list item into its child list produces an error since the parent list gets removed  
