@@ -1,0 +1,15 @@
+<template>
+	<require from="./dnd-item"></require>
+	
+	<div class="dndList" 
+		repeat.for="l of list" 
+		drop.trigger="onDrop($event, $index)"
+		dragover.trigger="onDragOver($event, $index)"
+		id="${l.id}_${$index}">
+ 		<dnd-item list.bind="list" item.bind="l" 
+ 				  index.bind="$index"
+ 				  top-level-item.bind="listHead">
+ 		</dnd-item>
+ 		<dnd-list-impl list.bind="l.list" list-head.bind="false"></dnd-list-impl>
+	</div>
+</template>

@@ -1,0 +1,11 @@
+<template>
+	<div class="dndItem ${item.type === undefined ? 'dndEmpty' : ''}" 
+			draggable.bind="item.draggable" 
+			dragstart.trigger="onDragStart($event, index)"
+			dragend.trigger="onDragEnd($event, index)"
+			id="${item.id}">
+			<span if.bind="item.type">
+				Type : ${item.type},  Id : ${item.id}
+			</span>
+	</div>
+</template>

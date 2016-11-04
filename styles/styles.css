@@ -1,0 +1,31 @@
+.dndPlaceholder {
+    background-color: gray;
+    height:30px;
+    padding:5px;
+    text-align:center;
+    color:white;
+}
+.dndPlaceholder:before {
+	content : 'Drop here';
+}
+
+.dndTop {
+	background-color: gray;
+    height:10px;
+}
+
+.dndList {
+	margin-left:20px;
+}
+
+.dndItem {
+	background-color:rgb(23, 190, 145); 
+	height:30px;
+	cursor: pointer;
+}
+
+.dndItem.dndEmpty {
+	background-color:inherit;
+	height:20px;
+	border:1px solid #eeeeee;
+}

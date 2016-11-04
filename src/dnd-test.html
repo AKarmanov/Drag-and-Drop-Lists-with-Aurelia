@@ -1,0 +1,27 @@
+<template>
+	<require from="dnd-item"></require>
+	
+	<div repeat.for="l of list" style="border: 1px solid black; margin-left:20px;" 
+		drop.trigger="onDrop($event, $index)"
+		dragover.trigger="onDragOver($event, $index)"
+		id="${l.id}_${$index}">
+		<!-- 
+<div class="DNDItem" 
+			style="background-color:rgb(23, 190, 145); height:30px;border:1px solid grey;"
+			draggable.bind="l.draggable" 
+			dragstart.trigger="onDragStart($event, $index)"
+			id="${l.id}">
+			${l.type}~~${l.id}
+		</div>
+ -->
+ 		<dnd-item list.bind="list" item.bind="l"></dnd-item>
+
+<!--  		<dnd-test list.bind="l.list"></dnd-test> -->
+	</div>
+	
+	<div if.bind="list.length === 0" style="height:3px;margin-left:20px;" 
+		drop.trigger="onDrop($event, $index)"
+		dragover.trigger="onDragOver($event, $index)"
+		id="${list.id}_empty">
+	</div>
+</template>
