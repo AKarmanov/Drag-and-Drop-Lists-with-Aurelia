@@ -37,13 +37,15 @@ export class DropTarget {
 		var data = JSON.parse(event.dataTransfer.getData("text"));
 		
 		//Clear list of empty object and insert new item in case : [{}]
+		//TODO fix this.list[0] is undefined error
+		//To reproduce take itemA.1 and drag it into itself (may redefine as slightly bigger problem)
+		//It is undefined because drop was handled and list got removed
 	   	if (this.list[0].type === undefined) {
 	   		this.list.splice(0, 1, data);
 	   		this.onDropCallback(event);
 	   		return;
 	   	} 
 	   	
-		//Note that target can be element other than placeholder (Needs to be fixed)
 		var placeholder = this.dndService.getPlaceHolder();
 		if (placeholder.nextSibling.tagName === "DND-ITEM") {
 			this.list.splice(this.getSiblingPositionInList(placeholder.nextSibling), 0, data);
