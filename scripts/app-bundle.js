@@ -11,80 +11,89 @@ define('app',["exports"], function (exports) {
 		}
 	}
 
-	var App = exports.App = function App() {
-		_classCallCheck(this, App);
+	var App = exports.App = function () {
+		function App() {
+			_classCallCheck(this, App);
 
-		this.list = [{
-			type: "A",
-			id: "itemA.0",
-			item: "Upper A",
-			draggable: false,
-			list: [{
+			this.list = [{
 				type: "A",
-				item: "From A",
-				id: "itemA.1",
-				draggable: true,
+				id: "0",
+				item: "Upper A",
+				draggable: false,
 				list: [{
 					type: "A",
-					id: "itemA.2",
-					item: "in from a",
+					item: "From A",
+					id: "1",
 					draggable: true,
-					list: []
-				}, {
-					type: "A",
-					id: "itemA.3",
-					item: "in from a",
-					draggable: true,
-					list: []
+					list: [{
+						type: "A",
+						id: "2",
+						item: "in from a",
+						draggable: true,
+						list: []
+					}, {
+						type: "A",
+						id: "3",
+						item: "in from a",
+						draggable: true,
+						list: []
+					}]
 				}]
-			}]
-		}, {
-			type: "B",
-			id: "itemB.0",
-			item: "Upper B",
-			draggable: true,
-			list: [{
+			}, {
 				type: "B",
-				item: "From B",
-				id: "itemB.1",
-				draggable: true
-			}]
-		}];
-		this.list2 = [{
-			type: "A",
-			id: "itemA.0",
-			item: "Upper A",
-			draggable: true,
-			list: [{
+				id: "4",
+				item: "Upper B",
+				draggable: true,
+				list: [{
+					type: "B",
+					item: "From B",
+					id: "5",
+					draggable: true
+				}]
+			}];
+			this.list2 = [{
 				type: "A",
-				item: "From A",
-				id: "itemA.1",
+				id: "6",
+				item: "Upper A",
 				draggable: true,
 				list: [{
 					type: "A",
-					id: "itemA.2",
-					item: "in from a",
+					item: "From A",
+					id: "7",
 					draggable: true,
-					list: []
-				}, {
-					type: "A",
-					id: "itemA.3",
-					item: "in from a",
-					draggable: true,
-					list: []
+					list: [{
+						type: "A",
+						id: "8",
+						item: "in from a",
+						draggable: true,
+						list: []
+					}, {
+						type: "A",
+						id: "9",
+						item: "in from a",
+						draggable: true,
+						list: []
+					}]
 				}]
-			}]
-		}, {
-			type: "B",
-			id: "itemB.0",
-			item: "Upper B",
-			draggable: true,
-			list: []
-		}];
-		this.list3 = [{}];
+			}, {
+				type: "B",
+				id: "10",
+				item: "Upper B",
+				draggable: true,
+				list: []
+			}];
+			this.list3 = [{}];
 
-		this.message = 'Drag and Drop Lists with Aurelia';
-	};
+			this.message = 'Drag and Drop Lists with Aurelia';
+		}
+
+		App.prototype.toString = function toString(list) {
+			console.log(JSON.stringify(list));
+			return JSON.stringify(list);
+		};
+
+		return App;
+	}();
 });
 define('dnd-draggable-item',["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
 	"use strict";
@@ -296,7 +305,15 @@ define('dnd-drop-target',["exports", "aurelia-framework"], function (exports, _a
 				}
 			}
 
-			this.dndService.handleDrop();
+			var placeholder = this.dndService.getPlaceHolder();
+
+			if (placeholder === null) {
+				return;
+			}
+
+			if (!this.dndService.handleDrop(this.list, index)) {
+				return;
+			}
 
 			var data = JSON.parse(event.dataTransfer.getData("text"));
 
@@ -306,7 +323,6 @@ define('dnd-drop-target',["exports", "aurelia-framework"], function (exports, _a
 				return;
 			}
 
-			var placeholder = this.dndService.getPlaceHolder();
 			if (placeholder.nextSibling.tagName === "DND-ITEM") {
 				this.list.splice(this.getSiblingPositionInList(placeholder.nextSibling), 0, data);
 			} else if (placeholder.previousSibling.tagName === "DND-ITEM") {
@@ -486,7 +502,6 @@ define('dnd-list',["exports", "aurelia-framework"], function (exports, _aureliaF
 
 		DragAndDropList.prototype.onDragStart = function onDragStart(event, index) {
 			this.dndService.initiateDragging(this.list, index);
-			console.log("hello", event.target.id);
 
 			event.dataTransfer.setData("text", JSON.stringify(this.list[index]));
 			event.dataTransfer.dropEffect = this.effect;
@@ -560,12 +575,16 @@ define('dnd-service',['exports', 'aurelia-framework', 'aurelia-pal'], function (
 			this.topLevelItem = topLevelItem;
 		};
 
-		DragAndDropService.prototype.handleDrop = function handleDrop() {
-			this.list.splice(this.index, 1);
+		DragAndDropService.prototype.handleDrop = function handleDrop(targetList, targetIndex) {
+			if (this.canDrop(targetList, targetIndex)) {
+				this.list.splice(this.index, 1);
 
-			if (this.list.length === 0 && this.topLevelItem) {
-				this.list.push({});
+				if (this.list.length === 0 && this.topLevelItem) {
+					this.list.push({});
+				}
+				return true;
 			}
+			return false;
 		};
 
 		DragAndDropService.prototype.createPlaceholder = function createPlaceholder() {
@@ -597,7 +616,9 @@ define('dnd-service',['exports', 'aurelia-framework', 'aurelia-pal'], function (
 		};
 
 		DragAndDropService.prototype.cleanUpPlaceHolder = function cleanUpPlaceHolder() {
-			this.placeholder.parentNode.removeChild(this.placeholder);
+			if (this.placeholder !== null && this.placeholder.parentNode !== null) {
+				this.placeholder.parentNode.removeChild(this.placeholder);
+			}
 		};
 
 		DragAndDropService.prototype.getPlaceHolder = function getPlaceHolder() {
@@ -614,6 +635,28 @@ define('dnd-service',['exports', 'aurelia-framework', 'aurelia-pal'], function (
 
 		DragAndDropService.prototype.insertAfter = function insertAfter(newNode, referenceNode) {
 			referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+		};
+
+		DragAndDropService.prototype.canDrop = function canDrop(targetList, targetIndex) {
+			if (this.list === targetList && this.index !== targetIndex) {
+				return true;
+			}
+
+			if (targetList[0] && targetList[0].id) {
+				return !this.idExistsInBranch(this.list[this.index], targetList[0].id);
+			}
+			return true;
+		};
+
+		DragAndDropService.prototype.idExistsInBranch = function idExistsInBranch(item, id) {
+			if (item.id === id) {
+				return true;
+			}
+			for (var i = 0; i < item.list.length; i++) {
+				var l = item.list[i];
+				return this.idExistsInBranch(item.list[i], id);
+			}
+			return false;
 		};
 
 		return DragAndDropService;

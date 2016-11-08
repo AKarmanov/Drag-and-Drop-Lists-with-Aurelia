@@ -19,7 +19,6 @@ export class DragAndDropList {
 	
 	onDragStart(event, index) {
 		this.dndService.initiateDragging(this.list, index);
-		console.log("hello", event.target.id)
 	   // Add the target element's id to the data transfer object
 	   event.dataTransfer.setData("text", JSON.stringify(this.list[index]));
 	   event.dataTransfer.dropEffect = this.effect;

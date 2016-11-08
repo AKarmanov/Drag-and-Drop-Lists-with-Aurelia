@@ -6,26 +6,26 @@ export class App {
   list = [
 		{
 			type : "A",
-			id : "itemA.0",
+			id : "0",
 			item : "Upper A",
 			draggable : false,
 			list: [
 				{
 					type : "A",
 					item : "From A",
-					id : "itemA.1",
+					id : "1",
 					draggable : true,
 					list : [
 						{
 							type : "A",
-							id : "itemA.2",
+							id : "2",
 							item : "in from a",
 							draggable : true,
 							list : []
 						},
 						{
 							type : "A",
-							id : "itemA.3",
+							id : "3",
 							item : "in from a",
 							draggable : true,
 							list : []
@@ -36,14 +36,14 @@ export class App {
 		},
 		{
 			type : "B",
-		    id : "itemB.0",
+		    id : "4",
 		    item : "Upper B",
 		    draggable : true,
 			list : [
 				{
 					type : "B",
 					item : "From B",
-					id : "itemB.1",
+					id : "5",
 					draggable : true
 				}
 			]
@@ -53,26 +53,26 @@ export class App {
 	list2 = [
 		{
 			type : "A",
-			id : "itemA.0",
+			id : "6",
 			item : "Upper A",
 			draggable : true,
 			list: [
 				{
 					type : "A",
 					item : "From A",
-					id : "itemA.1",
+					id : "7",
 					draggable : true,
 					list : [
 						{
 							type : "A",
-							id : "itemA.2",
+							id : "8",
 							item : "in from a",
 							draggable : true,
 							list : []
 						},
 						{
 							type : "A",
-							id : "itemA.3",
+							id : "9",
 							item : "in from a",
 							draggable : true,
 							list : []
@@ -83,7 +83,7 @@ export class App {
 		},
 		{
 			type : "B",
-		    id : "itemB.0",
+		    id : "10",
 		    item : "Upper B",
 		    draggable : true,
 			list : []
@@ -91,4 +91,9 @@ export class App {
 	];
 	
 	list3 = [{}];
+	
+	toString(list) {
+		console.log(JSON.stringify(list));
+		return JSON.stringify(list);
+	}
 }

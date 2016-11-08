@@ -21,12 +21,16 @@ export class DragAndDropService {
 		this.topLevelItem = topLevelItem;
 	}
 	
-	handleDrop() {
-		this.list.splice(this.index, 1);
-		//Return list to original empty state : [{}] for top level items only
-		if (this.list.length === 0 && this.topLevelItem) {
-			this.list.push({});
+	handleDrop(targetList, targetIndex) {
+		if (this.canDrop(targetList, targetIndex)) {
+			this.list.splice(this.index, 1);
+			//Return list to original empty state : [{}] for top level items only
+			if (this.list.length === 0 && this.topLevelItem) {
+				this.list.push({});
+			}
+			return true;
 		}
+		return false;
 	}
 	
 	createPlaceholder() {
@@ -61,7 +65,9 @@ export class DragAndDropService {
 	}
 	
 	cleanUpPlaceHolder() {
-		this.placeholder.parentNode.removeChild(this.placeholder)
+		if (this.placeholder !== null && this.placeholder.parentNode !== null) {
+			this.placeholder.parentNode.removeChild(this.placeholder);
+		}
 	}
 	
 	getPlaceHolder() {
@@ -78,5 +84,28 @@ export class DragAndDropService {
     
     insertAfter(newNode, referenceNode) {
     	referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    }
+    
+    //Check if first items id in targetList exists in doner list i. e. if targetList in doner list
+    canDrop(targetList, targetIndex) {
+    	if (this.list === targetList && this.index !== targetIndex) {
+    		return true;
+    	}
+    	
+    	if (targetList[0] && targetList[0].id) {
+    		return !this.idExistsInBranch(this.list[this.index], targetList[0].id);
+    	}
+    	return true; 
+    }
+    
+    idExistsInBranch(item, id) {
+    	if (item.id === id) {
+    			return true;
+    	}
+    	for (var i = 0; i < item.list.length; i++) {
+    		var l = item.list[i];
+    		return this.idExistsInBranch(item.list[i], id);
+    	}
+    	return false;
     }
 }
